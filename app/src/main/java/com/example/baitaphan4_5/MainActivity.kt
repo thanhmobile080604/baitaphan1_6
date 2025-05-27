@@ -1,21 +1,31 @@
 package com.example.baitaphan4_5
 
+import MyHelper
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.cursoradapter.widget.SimpleCursorAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.baitaphan4_5.databinding.ActivityMainBinding
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    val list = mutableListOf<StudentModel>()
-    lateinit var adapter : Adapter
+
+    lateinit var db: SQLiteDatabase
+    lateinit var rs: Cursor
+    lateinit var adapter: Adapter
+
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -27,11 +37,31 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        //Khoi tao database va con tro rs chay trong db
+        var helper = MyHelper(applicationContext)
+        db = helper.readableDatabase
+        rs = db.rawQuery("select * from quanly", null)
 
+        //tạo list model như binh thường và cho rs chạy cả db để lấy dữ liệu cho vào list
+        val list = mutableListOf<StudentModel>()
+        while (rs.moveToNext()) {
+            val id = rs.getInt(rs.getColumnIndexOrThrow("_id"))
+            val name = rs.getString(rs.getColumnIndexOrThrow("name"))
+            val mssv = rs.getString(rs.getColumnIndexOrThrow("mssv"))
+            val sdt = rs.getString(rs.getColumnIndexOrThrow("sdt"))
+            val email = rs.getString(rs.getColumnIndexOrThrow("email"))
+            list.add(StudentModel(id, name, mssv, sdt, email))
+        }
 
-        binding.rvlist.layoutManager = LinearLayoutManager(this)
+        //Hien thi danh sach nhu binh thuong
+        val layoutManager = LinearLayoutManager(this)
+        layoutManager.reverseLayout = true
+        layoutManager.stackFromEnd = true
+        binding.rvlist.layoutManager = layoutManager
         adapter = Adapter(list)
+        adapter.notifyDataSetChanged()
         binding.rvlist.adapter = adapter
+
 
 
 
@@ -52,28 +82,8 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onResume() {
-        super.onResume()
-        val name = intent.getStringExtra("name")
-        val mssv = intent.getStringExtra("mssv")
-        val sdt = intent.getStringExtra("sdt")
-        val email = intent.getStringExtra("email")
-        val update = intent.getBooleanExtra("update", false)
-        val add = intent.getBooleanExtra("add", false)
 
-        if (update) {
-            val position = intent.getIntExtra("position", -1)
-            if (position != -1) {
-                list[position] = StudentModel(name, mssv, sdt, email)
-                adapter.notifyItemChanged(position)
-            }
-        }
-        else if(add){
-            if (name != null && mssv != null && sdt != null && email != null) {
-                list.add(StudentModel(name, mssv, sdt, email))
-                adapter.notifyDataSetChanged()
-            }
-        }
-    }
+
+
 
 }

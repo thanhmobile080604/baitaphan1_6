@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_gravity="center"
+        android:layout_marginTop="100dp"
         android:padding="16dp">
 
         <EditText
@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Name"
+            android:maxLines="1"
             android:textSize="20sp" />
 
         <EditText
@@ -23,6 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="MSSV"
+            android:maxLines="1"
             android:textSize="20sp" />
 
         <EditText
@@ -30,6 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="SDT"
+            android:maxLines="1"
             android:textSize="20sp" />
 
         <EditText
@@ -37,6 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Email"
+            android:maxLines="1"
             android:textSize="20sp" />
 
         <Button

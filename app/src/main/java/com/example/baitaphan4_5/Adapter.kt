@@ -1,5 +1,6 @@
 package com.example.baitaphan4_5
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
@@ -11,6 +12,7 @@ import android.widget.BaseAdapter
 import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.baitaphan4_5.R
 import com.example.baitaphan4_5.StudentModel
@@ -36,6 +38,7 @@ class Adapter(private val list : MutableList<StudentModel>) : RecyclerView.Adapt
         return list.size
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val student = list[position]
         holder.name.text = student.name
@@ -54,14 +57,10 @@ class Adapter(private val list : MutableList<StudentModel>) : RecyclerView.Adapt
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     1 -> {
-                        val intent =
-                            Intent(holder.itemView.context, UpdateStudentActivity::class.java)
-                        intent.putExtra("name", student.name)
-                        intent.putExtra("mssv", student.mssv)
-                        intent.putExtra("sdt", student.sdt)
-                        intent.putExtra("email", student.email)
-                        intent.putExtra("position", position)
-                        holder.itemView.context.startActivity(intent)
+                         val intent = Intent(holder.itemView.context, UpdateStudentActivity::class.java)
+                        intent.putExtra("student_id", student.id)
+                         holder.itemView.context.startActivity(intent)
+                         true
                     }
 
                     2 -> {
